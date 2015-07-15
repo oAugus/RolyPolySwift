@@ -122,7 +122,7 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
 //        super.init()
 //    }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -162,7 +162,7 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         // update index of last visible card
         while self.shouldIncrementIndexOfLastVisibleCard() {
             self.indexOfLastVisibleCard += 1
-            var animated = self.indexOfLastVisibleCard > self.indexOfFurthestVisitedCard
+            let animated = self.indexOfLastVisibleCard > self.indexOfFurthestVisitedCard
             self.loadCardAtIndex(self.indexOfLastVisibleCard, animated: animated)
         }
         
@@ -182,7 +182,7 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         
         while self.shouldIncrementIndexOfLastVisibleCard() {
             self.indexOfLastVisibleCard += 1
-            var index = self.indexOfLastVisibleCard
+            let index = self.indexOfLastVisibleCard
             
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {
@@ -194,20 +194,20 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     }
 
     func loadCardAtIndex(index: Int, animated: Bool) {
-        var card: UIView = self.dataSource!.cardForItemAtIndex(self, index: index)
-        var width: CGFloat = self.cardWidth
-        var height: CGFloat = CGFloat(self.cardHeights.objectAtIndex(index).floatValue)
-        var x: CGFloat = self.view.center.x - width / 2
-        var y: CGFloat = CGFloat(self.cardPositions.objectAtIndex(index).floatValue)
+        let card: UIView = self.dataSource!.cardForItemAtIndex(self, index: index)
+        let width: CGFloat = self.cardWidth
+        let height: CGFloat = CGFloat(self.cardHeights.objectAtIndex(index).floatValue)
+        let x: CGFloat = self.view.center.x - width / 2
+        let y: CGFloat = CGFloat(self.cardPositions.objectAtIndex(index).floatValue)
         
 
         card.frame = CGRectMake(x, y, width, height)
         
-        var panRecognizer = UIPanGestureRecognizer(target: self, action:"handlePanFromRecognizer:")
+        let panRecognizer = UIPanGestureRecognizer(target: self, action:"handlePanFromRecognizer:")
         panRecognizer.delegate = self
         card.addGestureRecognizer(panRecognizer)
         
-        var key = NSNumber(integer: index)
+        let key = NSNumber(integer: index)
       
         self.visibleCards.setObject(card, forKey: key)
         self.view.addSubview(card)
@@ -223,8 +223,8 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     }
     
     func unloadCardAtIndex(index: Int) {
-        var key: NSNumber = NSNumber(integer: index)
-        var card: UIView = self.visibleCards.objectForKey(key) as! UIView
+        let key: NSNumber = NSNumber(integer: index)
+        let card: UIView = self.visibleCards.objectForKey(key) as! UIView
         
         self.visibleCards.removeObjectForKey(key)
         card.removeFromSuperview()
@@ -237,8 +237,8 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         
         Static.enterFromLeft = !Static.enterFromLeft
         
-        var scrollView: UIScrollView = self.view as! UIScrollView
-        var yOffset = 200 + scrollView.contentOffset.y + scrollView.frame.size.height - card.frame.origin.y
+        let scrollView: UIScrollView = self.view as! UIScrollView
+        let yOffset = 200 + scrollView.contentOffset.y + scrollView.frame.size.height - card.frame.origin.y
         
         
         card.transform = CGAffineTransformConcat(CGAffineTransformMakeTranslation(0, yOffset),CGAffineTransformMakeRotation(CGFloat(Static.enterFromLeft ? M_PI/10 : -M_PI/10)))
@@ -251,27 +251,27 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     // MARK: - Swipe To Delete Cards
     
     func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-        var panRecognizer = gestureRecognizer as! UIPanGestureRecognizer
+        let panRecognizer = gestureRecognizer as! UIPanGestureRecognizer
         
-        var translation = panRecognizer.translationInView(self.view)
-        var x: CGFloat = translation.x
-        var y: CGFloat = translation.y
-        var slopeLessThanOneThird: Bool = fabs(y/x) < 1.0/3.0
-        var slopeUndefined: Bool = x == 0 && y == 0
+        let translation = panRecognizer.translationInView(self.view)
+        let x: CGFloat = translation.x
+        let y: CGFloat = translation.y
+        let slopeLessThanOneThird: Bool = fabs(y/x) < 1.0/3.0
+        let slopeUndefined: Bool = x == 0 && y == 0
         return slopeLessThanOneThird || slopeUndefined
     }
     
     func handlePanFromRecognizer(recognizer: UIPanGestureRecognizer) {
         let deleteThreshold: CGFloat = 190.0
         
-        var card: UIView = recognizer.view!
+        let card: UIView = recognizer.view!
         
-        var horizontalOffset: CGFloat = recognizer.translationInView(self.view).x
+        let horizontalOffset: CGFloat = recognizer.translationInView(self.view).x
 
-        var direction: Direction = horizontalOffset < 0 ? .Left : .Right
+        let direction: Direction = horizontalOffset < 0 ? .Left : .Right
       
-        var angle: CGFloat = self.angleForHorizontalOffset(horizontalOffset)
-        var alpha: CGFloat = self.alphaForHorizontalOffset(horizontalOffset)
+        let angle: CGFloat = self.angleForHorizontalOffset(horizontalOffset)
+        let alpha: CGFloat = self.alphaForHorizontalOffset(horizontalOffset)
         
         card.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(angle), CGAffineTransformMakeTranslation(horizontalOffset, 0))
         
@@ -292,27 +292,27 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         
         let rotationThreshold: CGFloat = 70
         
-        var direction: CGFloat = horizontalOffset >= 0 ? 1.0 : -1.0
-        var tempHorizontalOffset: CGFloat = fabs(horizontalOffset)
+        let direction: CGFloat = horizontalOffset >= 0 ? 1.0 : -1.0
+        let tempHorizontalOffset: CGFloat = fabs(horizontalOffset)
         
         if tempHorizontalOffset < rotationThreshold {
             return 0
         }
         
-        var angle = (direction * (tempHorizontalOffset - rotationThreshold) * CGFloat((M_PI/1000)))
+        let angle = (direction * (tempHorizontalOffset - rotationThreshold) * CGFloat((M_PI/1000)))
         return angle
     }
     
     func alphaForHorizontalOffset(horizontalOffset: CGFloat) -> CGFloat {
         let alphaThreshold: CGFloat = 70
         
-        var tempHorizontalOffset: CGFloat = fabs(horizontalOffset);
+        let tempHorizontalOffset: CGFloat = fabs(horizontalOffset);
         
         if (tempHorizontalOffset < alphaThreshold) {
             return 1.0;
         }
         
-        var alpha = (CGFloat(pow(CGFloat(M_E), -pow(CGFloat((tempHorizontalOffset - alphaThreshold)/125), CGFloat(2)))));
+        let alpha = (CGFloat(pow(CGFloat(M_E), -pow(CGFloat((tempHorizontalOffset - alphaThreshold)/125), CGFloat(2)))));
         
         return alpha
     }
@@ -331,8 +331,8 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         if direction == .Left {
             finalOffset *= -1
         }
-        var finalAngle: CGFloat = self.angleForHorizontalOffset(finalOffset)
-        var finalAlpha: CGFloat = self.alphaForHorizontalOffset(finalOffset)
+        let finalAngle: CGFloat = self.angleForHorizontalOffset(finalOffset)
+        let finalAlpha: CGFloat = self.alphaForHorizontalOffset(finalOffset)
         
         UIView.animateWithDuration(0.3, delay: 0, options: .CurveEaseIn, animations: { () -> Void in
             card.transform = CGAffineTransformConcat(CGAffineTransformMakeRotation(finalAngle),
@@ -344,12 +344,12 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     
     func deleteCard(card: UIView) {
         
-        var index: Int = self.indexForVisibleCard(card)
-        var oldCardPositions: NSMutableArray = NSMutableArray(array: self.cardPositions)
+        let index: Int = self.indexForVisibleCard(card)
+        let oldCardPositions: NSMutableArray = NSMutableArray(array: self.cardPositions)
         oldCardPositions.removeObjectAtIndex(index)
         
         self.removeStateForCardAtIndex(index)
-        var overlap: CGFloat = self.makeScrollViewShorter()
+        let overlap: CGFloat = self.makeScrollViewShorter()
         
         if self.numberOfCards <= 0 {
             return
@@ -359,11 +359,11 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         // put visible cards in their old positions
         
         for var visibleCardIndex: Int = self.indexOfFirstVisibleCard; visibleCardIndex <= self.indexOfLastVisibleCard; visibleCardIndex++ {
-            var card: UIView = self.visibleCards.objectForKey(NSNumber(integer: visibleCardIndex)) as! UIView
-            var x: CGFloat = card.frame.origin.x
-            var y: CGFloat = (CGFloat((oldCardPositions.objectAtIndex(visibleCardIndex) as! NSNumber).floatValue) - overlap)
-            var width: CGFloat = card.frame.size.width
-            var height: CGFloat = card.frame.size.height
+            let card: UIView = self.visibleCards.objectForKey(NSNumber(integer: visibleCardIndex)) as! UIView
+            let x: CGFloat = card.frame.origin.x
+            let y: CGFloat = (CGFloat((oldCardPositions.objectAtIndex(visibleCardIndex) as! NSNumber).floatValue) - overlap)
+            let width: CGFloat = card.frame.size.width
+            let height: CGFloat = card.frame.size.height
             card.frame = CGRectMake(x, y, width, height)
             
         }
@@ -375,20 +375,20 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         self.unloadCardAtIndex(index)
         self.numberOfCards--
         
-        var removedCardHeight: CGFloat = CGFloat((self.cardHeights.objectAtIndex(index) as! NSNumber).floatValue)
+        let removedCardHeight: CGFloat = CGFloat((self.cardHeights.objectAtIndex(index) as! NSNumber).floatValue)
         self.cardHeights.removeObjectAtIndex(index)
         
         self.cardPositions.removeObjectAtIndex(index)
         for var i: Int = index; i < self.cardPositions.count; i++ {
             var position = CGFloat((self.cardPositions.objectAtIndex(i) as! NSNumber).floatValue)
             position -= removedCardHeight + self.padding
-            var tempPosition = Float(position)
+            let tempPosition = Float(position)
             self.cardPositions.replaceObjectAtIndex(i, withObject: NSNumber(float: tempPosition))
         }
         
         self.indexOfLastVisibleCard--
         
-        var keysInOrder: NSArray = self.visibleCards.allKeys.sorted { ( a: AnyObject,  b: AnyObject) -> Bool in
+        let keysInOrder: NSArray = self.visibleCards.allKeys.sort { ( a: AnyObject,  b: AnyObject) -> Bool in
             let c: NSNumber = a as! NSNumber
             let d: NSNumber = b as! NSNumber
             return c.floatValue < d.floatValue
@@ -397,10 +397,10 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         for key in keysInOrder {
             var cardIndex: Int = key.integerValue
             if (cardIndex > index) {
-                var card: UIView = self.visibleCards.objectForKey(key) as! UIView
+                let card: UIView = self.visibleCards.objectForKey(key) as! UIView
                 self.visibleCards.removeObjectForKey(key)
                 cardIndex--
-                var newKey: NSNumber = NSNumber(integer: cardIndex)
+                let newKey: NSNumber = NSNumber(integer: cardIndex)
                 self.visibleCards.setObject(card, forKey: newKey)
             }
         }
@@ -434,26 +434,26 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     
     func makeScrollViewShorter() -> CGFloat {
         
-        var scrollView: UIScrollView = self.view as! UIScrollView
+        let scrollView: UIScrollView = self.view as! UIScrollView
         
-        var bottomOfScrollView: CGFloat = scrollView.contentSize.height
-        var bottomOfScreen: CGFloat = scrollView.contentOffset.y + scrollView.frame.size.height
-        var bottomOfScreenToBottomOfScrollView: CGFloat = max(0, bottomOfScrollView - bottomOfScreen)
+        let bottomOfScrollView: CGFloat = scrollView.contentSize.height
+        let bottomOfScreen: CGFloat = scrollView.contentOffset.y + scrollView.frame.size.height
+        let bottomOfScreenToBottomOfScrollView: CGFloat = max(0, bottomOfScrollView - bottomOfScreen)
         
         var heightOfAllCards: CGFloat = 0
         
         for cardHeight in self.cardHeights {
             heightOfAllCards += CGFloat(cardHeight.floatValue)
         }
-        var spaceLeftByRemovedCard: CGFloat = scrollView.contentSize.height - heightOfAllCards - CGFloat((self.numberOfCards + 1)) * self.padding
+        let spaceLeftByRemovedCard: CGFloat = scrollView.contentSize.height - heightOfAllCards - CGFloat((self.numberOfCards + 1)) * self.padding
         
-        var amountScrollViewHeightWillChange: CGFloat = min(scrollView.contentSize.height - scrollView.frame.size.height, spaceLeftByRemovedCard)
+        let amountScrollViewHeightWillChange: CGFloat = min(scrollView.contentSize.height - scrollView.frame.size.height, spaceLeftByRemovedCard)
 
-        var overlap: CGFloat = max(0, bottomOfScreen - (bottomOfScrollView - amountScrollViewHeightWillChange))
+        let overlap: CGFloat = max(0, bottomOfScreen - (bottomOfScrollView - amountScrollViewHeightWillChange))
         
         // make scrollView shorter
         
-        var removedRegionOverlapsVisibleRegion: Bool = bottomOfScreenToBottomOfScrollView < amountScrollViewHeightWillChange
+        let removedRegionOverlapsVisibleRegion: Bool = bottomOfScreenToBottomOfScrollView < amountScrollViewHeightWillChange
        
         if removedRegionOverlapsVisibleRegion == true {
             self.isScrollingProgrammatically = true
@@ -469,27 +469,27 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     
     func fillEmptySpaceLeftByCardAtIndex(index: Int) {
         
-        var sortedKeys: NSArray = self.visibleCards.allKeys.sorted { (a: AnyObject, b: AnyObject) -> Bool in
+        let sortedKeys: NSArray = self.visibleCards.allKeys.sort { (a: AnyObject, b: AnyObject) -> Bool in
             let c = a as! NSNumber
             let d = b as! NSNumber
             
-            var distanceFromAToRemovedCard: NSNumber = NSNumber(integer: abs(c.integerValue - index))
-            var distanceFromBToRemovedCard: NSNumber = NSNumber(integer: abs(d.integerValue - index))
+            let distanceFromAToRemovedCard: NSNumber = NSNumber(integer: abs(c.integerValue - index))
+            let distanceFromBToRemovedCard: NSNumber = NSNumber(integer: abs(d.integerValue - index))
             return distanceFromAToRemovedCard.floatValue < distanceFromBToRemovedCard.floatValue
         }
         
         var delay = 0.0
         
         for key in sortedKeys {
-            var card: UIView = self.visibleCards.objectForKey(key) as! UIView
-            var oldPosition: CGFloat = card.frame.origin.y
-            var newPosition: CGFloat = CGFloat((self.cardPositions.objectAtIndex(key.integerValue) as! NSNumber).floatValue)
-            var needsToBeMoved: Bool = oldPosition != newPosition
+            let card: UIView = self.visibleCards.objectForKey(key) as! UIView
+            let oldPosition: CGFloat = card.frame.origin.y
+            let newPosition: CGFloat = CGFloat((self.cardPositions.objectAtIndex(key.integerValue) as! NSNumber).floatValue)
+            let needsToBeMoved: Bool = oldPosition != newPosition
             
             if needsToBeMoved {
                 card.frame = CGRectMake(card.frame.origin.x, newPosition, card.frame.size.width, card.frame.size.height)
                 card.transform = CGAffineTransformMakeTranslation(0, oldPosition - newPosition)
-                var duration = 0.5
+                let duration = 0.5
                 
                 UIView.animateWithDuration(duration, delay: delay, options: .CurveEaseInOut, animations: { () -> Void in
                     card.transform = CGAffineTransformIdentity
@@ -497,8 +497,8 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
                 
                 
                 // rotation
-                var angle: CGFloat = newPosition < oldPosition ? CGFloat(1*(M_PI/180)) : CGFloat(-1*(M_PI/180))
-                var rotationAnimation: CAKeyframeAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
+                let angle: CGFloat = newPosition < oldPosition ? CGFloat(1*(M_PI/180)) : CGFloat(-1*(M_PI/180))
+                let rotationAnimation: CAKeyframeAnimation = CAKeyframeAnimation(keyPath: "transform.rotation.z")
                 rotationAnimation.duration = Double(duration)
                 rotationAnimation.beginTime = CACurrentMediaTime() + Double(delay) + 0.01
                 rotationAnimation.calculationMode = kCAAnimationCubic
@@ -522,54 +522,54 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     // MARK: - Card Visibility
     
     func shouldDecrementIndexOfFirstVisibleCard() -> Bool {
-        var scrollView = self.view as! UIScrollView
+        let scrollView = self.view as! UIScrollView
         
-        var positionOfFirstVisibleCard = self.cardPositions.objectAtIndex(self.indexOfFirstVisibleCard) as! NSNumber
+        let positionOfFirstVisibleCard = self.cardPositions.objectAtIndex(self.indexOfFirstVisibleCard) as! NSNumber
         
-        var cardAboveIsVisible: Bool = CGFloat(positionOfFirstVisibleCard.floatValue) - scrollView.contentOffset.y > self.padding
+        let cardAboveIsVisible: Bool = CGFloat(positionOfFirstVisibleCard.floatValue) - scrollView.contentOffset.y > self.padding
         
 
-        var isFirstCardInList: Bool = self.indexOfFirstVisibleCard == 0
+        let isFirstCardInList: Bool = self.indexOfFirstVisibleCard == 0
         
         return cardAboveIsVisible && !isFirstCardInList
     }
     
     func shouldIncrementIndexOfFirstVisibleCard() -> Bool {
-        var scrollView = self.view as! UIScrollView
+        let scrollView = self.view as! UIScrollView
         
-        var positionOfFirstVisibleCard = self.cardPositions.objectAtIndex(self.indexOfFirstVisibleCard) as! NSNumber
-        var heightOfFirstVisibleCard = self.cardHeights.objectAtIndex(self.indexOfFirstVisibleCard) as! NSNumber
+        let positionOfFirstVisibleCard = self.cardPositions.objectAtIndex(self.indexOfFirstVisibleCard) as! NSNumber
+        let heightOfFirstVisibleCard = self.cardHeights.objectAtIndex(self.indexOfFirstVisibleCard) as! NSNumber
         
-        var cardIsNotVisible: Bool = CGFloat(positionOfFirstVisibleCard.floatValue) + CGFloat(heightOfFirstVisibleCard.floatValue) <= scrollView.contentOffset.y
+        let cardIsNotVisible: Bool = CGFloat(positionOfFirstVisibleCard.floatValue) + CGFloat(heightOfFirstVisibleCard.floatValue) <= scrollView.contentOffset.y
         
-        var isLastCardInList: Bool = self.indexOfFirstVisibleCard == self.numberOfCards - 1
+        let isLastCardInList: Bool = self.indexOfFirstVisibleCard == self.numberOfCards - 1
         return cardIsNotVisible && !isLastCardInList
     }
     
     func shouldDecrementIndexOfLastVisibleCard() -> Bool {
-        var scrollView = self.view as! UIScrollView
+        let scrollView = self.view as! UIScrollView
         
-        var positionOfLastVisibleCard = self.cardPositions.objectAtIndex(self.indexOfLastVisibleCard) as! NSNumber
+        let positionOfLastVisibleCard = self.cardPositions.objectAtIndex(self.indexOfLastVisibleCard) as! NSNumber
         
-        var positionOfScreenBottom = scrollView.contentOffset.y + scrollView.frame.size.height
+        let positionOfScreenBottom = scrollView.contentOffset.y + scrollView.frame.size.height
         
-        var cardIsNotVisible: Bool = CGFloat(positionOfLastVisibleCard.floatValue) > positionOfScreenBottom
-        var isFirstCardInList: Bool = self.indexOfLastVisibleCard == 0
+        let cardIsNotVisible: Bool = CGFloat(positionOfLastVisibleCard.floatValue) > positionOfScreenBottom
+        let isFirstCardInList: Bool = self.indexOfLastVisibleCard == 0
         
         return cardIsNotVisible && !isFirstCardInList
     }
     
     func shouldIncrementIndexOfLastVisibleCard() -> Bool {
-        var scrollView = self.view as! UIScrollView
+        let scrollView = self.view as! UIScrollView
         
-        var positionOfLastVisibleCard = self.cardPositions.objectAtIndex(self.indexOfLastVisibleCard) as! NSNumber
+        let positionOfLastVisibleCard = self.cardPositions.objectAtIndex(self.indexOfLastVisibleCard) as! NSNumber
         
-        var heightOfLastVisibleCard = self.cardHeights.objectAtIndex(self.indexOfLastVisibleCard) as! NSNumber
-        var positionOfScreenBottom = scrollView.contentOffset.y + scrollView.frame.size.height
-        var positionOfCardBottom = CGFloat(positionOfLastVisibleCard.floatValue + heightOfLastVisibleCard.floatValue)
+        let heightOfLastVisibleCard = self.cardHeights.objectAtIndex(self.indexOfLastVisibleCard) as! NSNumber
+        let positionOfScreenBottom = scrollView.contentOffset.y + scrollView.frame.size.height
+        let positionOfCardBottom = CGFloat(positionOfLastVisibleCard.floatValue + heightOfLastVisibleCard.floatValue)
         
-        var cardBelowIsVisble: Bool = positionOfScreenBottom - positionOfCardBottom > self.padding
-        var isLastCardInList: Bool = self.indexOfLastVisibleCard == self.numberOfCards - 1
+        let cardBelowIsVisble: Bool = positionOfScreenBottom - positionOfCardBottom > self.padding
+        let isLastCardInList: Bool = self.indexOfLastVisibleCard == self.numberOfCards - 1
         
         return cardBelowIsVisble && !isLastCardInList
     }
@@ -579,13 +579,13 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
     
     func createScrollView() -> UIScrollView {
         
-        var fullScreenRect: CGRect = UIScreen.mainScreen().applicationFrame
-        var scrollView = UIScrollView(frame: fullScreenRect)
+        let fullScreenRect: CGRect = UIScreen.mainScreen().applicationFrame
+        let scrollView = UIScrollView(frame: fullScreenRect)
         
         scrollView.backgroundColor = UIColor(red: 0.898, green: 0.898, blue: 0.898, alpha: 1.0)
         scrollView.alwaysBounceVertical = true
         
-        var contentWidth = UIScreen.mainScreen().applicationFrame.size.width
+        let contentWidth = UIScreen.mainScreen().applicationFrame.size.width
         var contentHeight: CGFloat = self.padding
         
         for cardHeight in self.cardHeights {
@@ -603,7 +603,7 @@ class CardListViewController: UIViewController, UIScrollViewDelegate, UIGestureR
         var index: Int = self.indexOfFirstVisibleCard
         
         while index < self.indexOfLastVisibleCard {
-            var key = NSNumber(integer: index)
+            let key = NSNumber(integer: index)
             
             if self.visibleCards.objectForKey(key) as! UIView == card {
                 break

@@ -25,8 +25,8 @@ class BookmarkCardFactory : NSObject {
     
     class func createBookmarkCardFromBookmark(bookmark: Bookmark) -> UIView {
         
-        var proxy = BookmarkCardProxy()
-        var bookmarkCard = NSBundle.mainBundle().loadNibNamed("BookmarkCardView", owner: proxy, options: nil)[0] as! UIView
+        let proxy = BookmarkCardProxy()
+        let bookmarkCard = NSBundle.mainBundle().loadNibNamed("BookmarkCardView", owner: proxy, options: nil)[0] as! UIView
         
         proxy.productName.text = bookmark.productName
         proxy.productImage.image = UIImage(named: bookmark.productImagePath)
@@ -45,9 +45,9 @@ class BookmarkCardFactory : NSObject {
     }
     
     class func currencyStringForPrice(price: Int) -> String {
-        var numberFormatter = NSNumberFormatter()
+        let numberFormatter = NSNumberFormatter()
         numberFormatter.numberStyle = .CurrencyStyle
-        var numberAsString = numberFormatter.stringFromNumber(NSNumber(integer: price))
+        let numberAsString = numberFormatter.stringFromNumber(NSNumber(integer: price))
         if let tempNumberAsSting = numberAsString {
             return tempNumberAsSting
         } else {
